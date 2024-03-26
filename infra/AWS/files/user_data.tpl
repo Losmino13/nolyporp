@@ -59,10 +59,9 @@ sudo ansible-playbook /home/ubuntu/install_nginx.yaml
 mv /var/www/html/index.nginx-debian.html /var/www/html/index.html
 sudo systemctl restart nginx
 
-export ACCESS_KEY=`aws secretsmanager get-secret-value --secret-id aws_s3_key_dev --region eu-central-1 | jq -r .SecretString`
-export SECRET_KEY=`aws secretsmanager get-secret-value --secret-id aws_s3_secret_key_dev --region eu-central-1 | jq -r .SecretString`
-echo ${ACCESS_KEY}:${SECRET_KEY} > ~/.passwd-s3fs
+aws secretsmanager get-secret-value --secret-id aws_s3_key_dev --region eu-central-1 | jq -r .SecretString > ~/.passwd-s3fs
 chmod 600 ~/.passwd-s3fs
 
 sudo mkdir /mnt/s3-bucket
-sudo s3fs nolyporp-dev-fe /mnt/s3-bucket -o passwd_file=~/.passwd-s3fs -o url=https://s3.amazonaws.com
+echo "*/5 * * * * sudo s3fs nolyporp-dev-fe /mnt/s3-bucket -o passwd_file=~/.passwd-s3fs -o url=https://s3.amazonaws.com" > crontab.txt
+crontab crontab.txt

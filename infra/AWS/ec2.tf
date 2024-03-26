@@ -9,17 +9,17 @@ resource "aws_key_pair" "ec2_key" {
 module "ec2_instances" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
-  # count = local.instance_count
-  #name                        = "nolyporp-${var.environment}-${local.instance_suffixes[count.index]}"
-  name                        = "nolyporp"
+  count = local.instance_count
+  name                        = "nolyporp-${var.environment}-${local.instance_suffixes[count.index]}"
+  # name                        = "nolyporp"
   ami                         = var.ubuntu_22_04_lts_ami
   instance_type               = "t2.micro"
   key_name                    = aws_key_pair.ec2_key.id
   monitoring                  = false
   associate_public_ip_address = true
 
-  subnet_id              = element(flatten([module.vpc.public_subnets]), 0)
-  # subnet_id              = module.vpc.public_subnets[count.index]
+  # subnet_id              = element(flatten([module.vpc.public_subnets]), 0)
+  subnet_id              = module.vpc.public_subnets[count.index]
   vpc_security_group_ids = [aws_security_group.frontend.id]
 
   iam_instance_profile = "${aws_iam_instance_profile.instance_profile.name}"

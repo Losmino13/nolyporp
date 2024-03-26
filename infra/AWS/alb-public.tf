@@ -16,11 +16,12 @@ resource "aws_lb_target_group" "nginx" {
   name     = "nginx-${var.environment}"
   port     = 80
   protocol = "HTTP"
-  vpc_id = module.vpc.vpc_id
+  vpc_id   = module.vpc.vpc_id
 }
 resource "aws_lb_target_group_attachment" "nginx" {
+  count            = 3
   target_group_arn = aws_lb_target_group.nginx.arn
-  target_id        = module.ec2_instances.id
+  target_id        = module.ec2_instances[count.index].id
   port             = 80
 }
 resource "aws_lb_listener" "nginx" {
