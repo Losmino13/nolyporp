@@ -42,7 +42,8 @@ module "ec2_instances" {
 
   depends_on = [
     aws_security_group.frontend,
-    module.vpc
+    module.vpc,
+    aws_secretsmanager_secret.aws_s3_key
   ]
 }
 

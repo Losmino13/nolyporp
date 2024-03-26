@@ -9,7 +9,7 @@ terraform {
 ########################## Default region ##########################
 provider "aws" {
   region                   = "eu-central-1"
-  shared_credentials_files = ["/Users/milosmilisavljevic/.aws/credentials_nolyporp"]
+  shared_credentials_files = ["~/.aws/credentials_nolyporp"]
 }
 
 ######################### Store Terraform state file into S3 bucket ##########################
